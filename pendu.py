@@ -10,15 +10,38 @@ def choix_hasard():
     """Choisi un mot au hasard dans une liste prédéfinie
     :return: mot_choisi : str : mot à deviner
     """
-    fichier = open("technologies.txt", "r")
-    lignes = fichier.readlines()
-    for ligne in lignes:
-        mot = choice(lignes)
+    # ---- utilisable uniquement avec le fichier texte correspondant ----
+    #fichier = open("technologies.txt", "r")
+    #lignes = fichier.readlines()
+    #for ligne in lignes:
+    #    mot = choice(lignes)
 
-    liste_eclatee = list(mot)
+    #liste_eclatee = list(mot)
 
-    del liste_eclatee[-2:]
-    mot_choisi = "".join(liste_eclatee)
+    #del liste_eclatee[-2:]
+    #mot_choisi = "".join(liste_eclatee)
+    # ------------------------------------------------------------------
+
+    technologies = ["ordinateur", "souris", "clavier", "processeur", "ecran", "enceintes", "smartphone", "casque", "tablette", "drone", "windows"]
+    fruits = ["framboise", "fraise", "pomme", "poire", "pamplemousse", "litchi", "orange", "mandarine", "banane", "raisin", "kiwi", "ananas", "cerise"]
+    animaux = ["gazelle", "vache", "cheval", "pangolin", "zebre", "girafe", "ours", "tigre", "hippopotame", "lion", "ecureuil", "otarie", "elephant"]
+
+    theme = input("Quel thème osuhaitez-vous choisir ?\n1- Technologies\n2- Fruits\n3- Animaux")
+
+    if theme == "1":
+        mot_choisi = choice(technologies)
+
+    elif theme == "2":
+        mot_choisi = choice(fruits)
+
+    elif theme == "3":
+        mot_choisi = choice(animaux)
+
+    else:
+        raise TypeError
+
+    # postconditions
+    assert type(mot_choisi) == str
 
     return mot_choisi
 
@@ -65,47 +88,45 @@ def strReplace(ch1, ch2, lettre):
 def menu():
     """
     Menu du jeu du pendu
-    :param: action : str : action que l'utilisateur souhaite effectuer
     """
 
-
-    # préconditions
-
-    # on vérifie que le chiffre associé à l'action est valide
-
     mot_choisi = choix_hasard()
-
     coups = len(mot_choisi) + 1
-
+    compteur = len(mot_choisi) + 1
+    COUPS = 0
     mot_affiche = strAffiche(mot_choisi)
 
     print(mot_affiche)
 
-    compteur = 10
     lettres_proposees = []
+    autres_propositions = []
+    alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 
     while mot_affiche != mot_choisi and compteur != 0:
         print("\n-----------------------------")
         print("Mot inconnu", mot_affiche)
         print("-----------------------------\n")
-        print("Coup numéro :", compteur)
+        print("Coup numéro :", COUPS)
+        print("Il vous reste :", compteur, "coups")
         print("Lettres déjà proposées :", lettres_proposees, "")
-        print("Il faut trouver le mot en moins de ", coups, "coups !")
+        print("Il faut trouver le mot en moins de ", coups, "coups !\n\n")
         print("-------------------------------------------------------------")
 
-        lettre = input("\nSaisir une lettre : ")
+        lettre = input("Saisir une lettre : ")
 
-        if lettre.isdigit() is True:
+        if lettre in alphabet:
 
             # si la lettre est contenue mais pas affichée
             if lettre in mot_choisi and lettre not in mot_affiche:
                 mot_affiche = strReplace(mot_choisi, mot_affiche, lettre)
                 lettres_proposees.append(lettre)
+                COUPS += 1
 
             # si la lettre a déjà été saisie mais qu'elle n'est pas contenue
             elif lettre in lettres_proposees and lettre not in mot_choisi:
                 print("Lettre déjà proposée !")
                 compteur -= 1
+                COUPS += 1
 
             # si la lettre a déjà été saisie et qu'elle est affichée
             elif lettre in lettres_proposees and lettre in mot_affiche:
@@ -116,9 +137,14 @@ def menu():
                 print("Lettre non contenue dans le mot !")
                 compteur -= 1
                 lettres_proposees.append(lettre)
+                COUPS += 1
 
-        elif lettre.isdigit() is False:
-            print("Ne pas saisir d'autres caractères que des chiffres !")
+        elif lettre not in alphabet:
+            print("Ne pas saisir d'autres caractères que des lettres !")
+            autres_propositions.append(lettre)
+            compteur -= 1
+            COUPS += 1
+            print("Autres propositions fausses :", autres_propositions)
 
     if mot_affiche == mot_choisi:
         print("Bravo vous avez trouvé ! Le mot était : ", mot_choisi)
@@ -134,10 +160,10 @@ def menu():
 
 continuer = True
 
-while continuer != False:
+while continuer:
 
     try:
-        action = input("\nBonjour bienvenue sur notre jeu !\n1- Jouer !\n2- Quitter\n")
+        action = input("- Jeu du pendu -\n1- Jouer !\n2- Quitter\n")
 
         if action == "1":
             menu()
@@ -158,6 +184,9 @@ while continuer != False:
 
     except ValueError:
         print("Merci de saisir des chiffres valides (1 ou 2) !")
+
+    except TypeError:
+        print("Saisir un chiffre ! (1 ou 2 ou 3)")
 
 
 
