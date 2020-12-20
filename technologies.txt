@@ -1,0 +1,12 @@
+ordinateur 
+souris 
+clavier 
+processeur 
+ecran 
+enceintes 
+lampe 
+martphone 
+casque 
+tablette 
+drone 
+windows
