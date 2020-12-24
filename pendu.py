@@ -1,10 +1,10 @@
-# Créé par Elève, le 19/12/2020 en Python 3.7
+# Créé par valen, le 19/12/2020 en Python 3.7
 
-# on importe 'choice' pour choisir aléatoirement un mot parmi des listes de mots
+# on importe import 'choice' pour choisir aléatoirement un mot à deviner
 from random import choice
 
 ####################
-### Fonctions
+# Fonctions
 ####################
 
 
@@ -13,9 +13,11 @@ def choix_hasard():
     Choisi un mot au hasard dans une liste prédéfinie
     :return: mot_choisi : str : mot choisi et à deviner par le joueur
     """
+
     # mots disponibles
     technologies = ["ordinateur", "souris", "clavier", "processeur", "ecran",
-    "enceintes", "smartphone", "casque", "tablette", "drone", "windows"]
+                    "enceintes", "smartphone", "casque", "tablette", "drone",
+                    "windows"]
 
     fruits = ["framboise", "fraise", "pomme", "poire", "pamplemousse",
               "litchi", "orange", "mandarine", "banane", "raisin", "kiwi",
@@ -47,7 +49,7 @@ def choix_hasard():
     # postconditions
     assert type(mot_choisi) == str  # vérification type du mot
 
-    return mot_choisi
+    return mot_choisi  # retour du mot choisi
 
 
 def strAffiche(ch):
@@ -60,12 +62,10 @@ def strAffiche(ch):
     # préconditions
     assert type(ch) == str  # vérification du type de la variable
 
-    mot_affiche = ""
-    while len(ch) != len(mot_affiche):
-        mot_affiche += "*"
+    mot_affiche = "*" * len(ch)
 
     # postconditions
-    assert len(ch) == len(mot_affiche)  # vérification longueur str
+    assert len(mot_affiche) == len(ch)  # vérification longueur str
 
     return mot_affiche  # retour du mot masqué
 
@@ -110,12 +110,11 @@ def menu():
           "comptés faux !")
     print("**********************************************")
 
-    mot_choisi = choix_hasard()
-    compteur = len(mot_choisi) + 1
-    print("Compteur : ", compteur) ###NAME ERROR !!e!f
-    coups = 0
-    mot_affiche = strAffiche(mot_choisi)
-    lettres_proposees = []
+    mot_choisi = choix_hasard()  # choix du mot
+    compteur = len(mot_choisi) + 1  # initialisation du compteur
+    coups = 0  # compteur d'essais
+    mot_affiche = strAffiche(mot_choisi)  # affichage mot masqué
+    lettres_proposees = []  # lettres ou caractères déjà proposés
 
     while mot_affiche != mot_choisi and compteur != 0:
         print("\n-----------------------------")
@@ -126,78 +125,83 @@ def menu():
         print("Trouvez le mot en moins de ", compteur, "coups !\n\n")
         print("-------------------------------------------------------------")
 
+        # les lettres doivent être en lettres minuscules
         lettre = input("Saisir une lettre : ").lower()
 
         if lettre in mot_choisi:  # si la lettre est dans le mot choisi
 
-            # si la lettre est contenue mais pas affichée
+            # si la lettre n'est pas affichée
             if lettre not in mot_affiche:
                 mot_affiche = strReplace(mot_choisi, mot_affiche, lettre)
                 lettres_proposees.append(lettre)
 
-            # si la lettre a déjà été saisie et qu'elle est affichée
+            # si la lettre a déjà été proposée et qu'elle est affichée
             elif lettre in mot_affiche and lettre in lettres_proposees:
                 print("Lettre déjà proposée et déjà remplacée dans le mot !")
-            coups += 1
 
+            coups += 1  # mise à jour du nombre de coups
 
-        elif lettre not in mot_choisi:  # si la lettre n'est pas dans le mot choisi
+        elif lettre not in mot_choisi:  # si la lettre n'est pas dans le mot
 
+            # si la lettre a déjà été proposée
             if lettre in lettres_proposees:
                 print("Lettre déjà proposée et non contenue dans le mot !!")
 
+            # si la lettre n'est pas contenue dans le mot
             else:
                 print("Lettre ou caractère non contenu dans le mot !")
 
-            coups += 1
-            compteur -= 1
+            coups += 1  # mise à jour du compteur de coups
+            compteur -= 1  # mise à jour du nombre d'essais restants
             lettres_proposees.append(lettre)
 
+    # si le mot a été deviné
     if mot_affiche == mot_choisi:
         print("\n-----------------------------")
         print("Mot inconnu :", mot_affiche)
         print("-----------------------------\n")
         print("Bravo vous avez trouvé ! Le mot était : ", mot_choisi)
 
+    # si le mot n'a pas été deviné
     else:
         print("Perdu ! le mot était : ", mot_choisi, "\nVous pouvez rejouer !")
 
 
 ###########################
-### programme principal ###
+# programme principal
 ###########################
 
-
 continuer = True
-
 while continuer:
 
     try:
         action = input("- Jeu du pendu -\n1- Jouer !\n2- Quitter\n")
 
         if action == "1":
-            menu()
+            menu()  # lancement du jeu
 
         elif action == "2":
             print("\nA bientôt pour de nouvelles parties endiablées !")
-            continuer = False
+            continuer = False  # arrêt du jeu
 
         else:
-            raise ValueError
+            print("Saisir un chiffre valide (1 ou 2) !")
 
-    except ValueError:
-        print("Merci de saisir des chiffres valides (1 ou 2) !")
-
+    # si les varaiables dans les fonctions ne sont pas du bon type
+    # ou si les longueurs des str ne sont valides
     except AssertionError:
-        print("Merci de saisir un chiffre valide !")
+        print("Erreur ! (type des variables ou longueurs des chaînes de" +
+              "caractères")
 
+    # si l'utilisateur quitte le programme (croix rouge ou cancel)
     except KeyboardInterrupt:
         print("Vous avez quitté le jeu ! A bientot !")
-        continuer = False
+        continuer = False  # arrêt du jeu
 
+    # pour revenir au menu lors du choix du thème
     except NameError:
         pass
 
+    # le choix du thème n'est pas valide
     except TypeError:
         print("Saisir un chiffre ! (1 ou 2 ou 3 ou 4)")
-
