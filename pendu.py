@@ -1,6 +1,6 @@
 # Créé par Elève, le 19/12/2020 en Python 3.7
 
-# on importe 'choice' pour choisir aléatoirement un mot parmi une liste de mots
+# on importe 'choice' pour choisir aléatoirement un mot parmi des listes de mots
 from random import choice
 
 ####################
@@ -9,25 +9,23 @@ from random import choice
 
 
 def choix_hasard():
-    """Choisi un mot au hasard dans une liste prédéfinie
-    :return: mot_choisi : str : mot à deviner
     """
-    # ---- fonctionne uniquement avec le fichier texte correspondant ---------
-    #fichier = open("technologies.txt", "r")
-    #lignes = fichier.readlines()
-    #for ligne in lignes:
-    #    mot = choice(lignes)
+    Choisi un mot au hasard dans une liste prédéfinie
+    :return: mot_choisi : str : mot choisi et à deviner par le joueur
+    """
+    # mots disponibles
+    technologies = ["ordinateur", "souris", "clavier", "processeur", "ecran",
+    "enceintes", "smartphone", "casque", "tablette", "drone", "windows"]
 
-    #liste_eclatee = list(mot)
+    fruits = ["framboise", "fraise", "pomme", "poire", "pamplemousse",
+              "litchi", "orange", "mandarine", "banane", "raisin", "kiwi",
+              "ananas", "cerise"]
 
-    #del liste_eclatee[-2:]
-    #mot_choisi = "".join(liste_eclatee)
-    # ------------------------------------------------------------------------
+    animaux = ["gazelle", "vache", "cheval", "pangolin", "zebre", "girafe",
+               "ours", "tigre", "hippopotame", "lion", "ecureuil", "otarie",
+               "elephant"]
 
-    technologies = ["ordinateur", "souris", "clavier", "processeur", "ecran", "enceintes", "smartphone", "casque", "tablette", "drone", "windows"]
-    fruits = ["framboise", "fraise", "pomme", "poire", "pamplemousse", "litchi", "orange", "mandarine", "banane", "raisin", "kiwi", "ananas", "cerise"]
-    animaux = ["gazelle", "vache", "cheval", "pangolin", "zebre", "girafe", "ours", "tigre", "hippopotame", "lion", "ecureuil", "otarie", "elephant"]
-
+    # choix du thème
     theme = input("Avec quel thème souhaitez-vous jouer ?\n\n1- Technologies" +
                   "\n2- Fruits\n3- Animaux\n4 -Revenir au menu")
 
@@ -40,14 +38,14 @@ def choix_hasard():
     elif theme == "3":
         mot_choisi = choice(animaux)
 
-    elif theme == "4":
+    elif theme == "4":  # revenir au menu
         raise NameError
 
-    else:
+    else:  # en cas d'erreur de saisie
         raise TypeError
 
     # postconditions
-    assert type(mot_choisi) == str
+    assert type(mot_choisi) == str  # vérification type du mot
 
     return mot_choisi
 
@@ -56,11 +54,11 @@ def strAffiche(ch):
     """
     Renvoie le mot masqué
     :param: ch : str, mot à deviner
-    :return: str : mot_affiche, mot masqué
+    :return: mot_affiche : str, mot choisi dont les lettres sont masquées
     """
 
     # préconditions
-    assert type(ch) == str
+    assert type(ch) == str  # vérification du type de la variable
 
     mot_affiche = ""
     while len(ch) != len(mot_affiche):
@@ -75,12 +73,13 @@ def strAffiche(ch):
 def strReplace(ch1, ch2, lettre):
     """
     Remplace les "*" par des lettres si elles sont contenues dans le mot
-    :param: ch1 : str : mot_choisi, c'est le mot à deviner
-            ch2 : str : mot_affiche, c'est le mot masqué qui évolue
-            lettre : str : lettre saisie par l'utilisateur
+    :param: ch1 : mot_choisi : str, c'est le mot à deviner
+            ch2 : mot_affiche : str, c'est le mot masqué qui évolue
+            lettre : str, proposée par le joueur
     :return: ch : str : mot masqué qui a peut être évolué
     """
 
+    # vérification des types des variables
     assert type(ch1) == str and type(ch2) == str and type(lettre) == str
 
     liste_lettres = list(ch2)  # on transforme le mot masqué en une liste
@@ -90,7 +89,9 @@ def strReplace(ch1, ch2, lettre):
             liste_lettres[i] = lettre  # remplacement d'une "*" par la lettre
     ch = "".join(liste_lettres)  # on recolle les éléments de la liste en str
 
+    # postconditions
     assert type(ch) == str
+    assert len(ch) == len(ch1) == len(ch2)
 
     return ch  # retour du mot modifié
 
@@ -110,56 +111,52 @@ def menu():
     print("**********************************************")
 
     mot_choisi = choix_hasard()
-    coups = len(mot_choisi) + 1
     compteur = len(mot_choisi) + 1
-    COUPS = 0
+    print("Compteur : ", compteur) ###NAME ERROR !!e!f
+    coups = 0
     mot_affiche = strAffiche(mot_choisi)
-    propositions = []
+    lettres_proposees = []
 
     while mot_affiche != mot_choisi and compteur != 0:
         print("\n-----------------------------")
-        print("Mot inconnu", mot_affiche)
+        print("Mot inconnu :", mot_affiche)
         print("-----------------------------\n")
-        print("Coup numéro :", COUPS)
-        print("Il vous reste :", compteur, "coups")
-        print("Lettres ou caractères déjà proposés :", propositions, "")
-        print("Il faut trouver le mot en moins de ", coups, "coups !\n\n")
+        print("Coup numéro :", coups)
+        print("Lettres ou caractères déjà proposés :", lettres_proposees, "")
+        print("Trouvez le mot en moins de ", compteur, "coups !\n\n")
         print("-------------------------------------------------------------")
 
         lettre = input("Saisir une lettre : ").lower()
 
-        if lettre in mot_choisi:
+        if lettre in mot_choisi:  # si la lettre est dans le mot choisi
 
             # si la lettre est contenue mais pas affichée
-            if lettre in mot_choisi and lettre not in mot_affiche:
+            if lettre not in mot_affiche:
                 mot_affiche = strReplace(mot_choisi, mot_affiche, lettre)
-                propositions.append(lettre)
-                COUPS += 1
-
-            # si la lettre a déjà été saisie mais qu'elle n'est pas contenue
-            elif lettre in propositions and lettre not in mot_choisi:
-                print("Lettre déjà proposée !")
-                compteur -= 1
-                COUPS += 1
+                lettres_proposees.append(lettre)
 
             # si la lettre a déjà été saisie et qu'elle est affichée
-            elif lettre in propositions and lettre in mot_affiche:
+            elif lettre in mot_affiche and lettre in lettres_proposees:
                 print("Lettre déjà proposée et déjà remplacée dans le mot !")
+            coups += 1
 
-            # si la lettre n'est pas contenue
-            elif lettre not in mot_choisi:
-                print("Lettre non contenue dans le mot !")
-                compteur -= 1
-                propositions.append(lettre)
-                COUPS += 1
 
-        elif lettre not in propositions:
-            print("Lettre ou caractère non contenu dans le mot !")
-            propositions.append(lettre)
+        elif lettre not in mot_choisi:  # si la lettre n'est pas dans le mot choisi
+
+            if lettre in lettres_proposees:
+                print("Lettre déjà proposée et non contenue dans le mot !!")
+
+            else:
+                print("Lettre ou caractère non contenu dans le mot !")
+
+            coups += 1
             compteur -= 1
-            COUPS += 1
+            lettres_proposees.append(lettre)
 
     if mot_affiche == mot_choisi:
+        print("\n-----------------------------")
+        print("Mot inconnu :", mot_affiche)
+        print("-----------------------------\n")
         print("Bravo vous avez trouvé ! Le mot était : ", mot_choisi)
 
     else:
@@ -188,6 +185,9 @@ while continuer:
         else:
             raise ValueError
 
+    except ValueError:
+        print("Merci de saisir des chiffres valides (1 ou 2) !")
+
     except AssertionError:
         print("Merci de saisir un chiffre valide !")
 
@@ -195,11 +195,9 @@ while continuer:
         print("Vous avez quitté le jeu ! A bientot !")
         continuer = False
 
-    except ValueError:
-        print("Merci de saisir des chiffres valides (1 ou 2) !")
+    except NameError:
+        pass
 
     except TypeError:
         print("Saisir un chiffre ! (1 ou 2 ou 3 ou 4)")
 
-    except NameError:
-        pass
