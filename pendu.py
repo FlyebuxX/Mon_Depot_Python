@@ -128,32 +128,40 @@ def menu():
         # les lettres doivent être en lettres minuscules
         lettre = input("Saisir une lettre : ").lower()
 
-        if lettre in mot_choisi:  # si la lettre est dans le mot choisi
+        # si la saisie est une lettre valide
+        if lettre.islower() is True and len(lettre) == 1:
 
-            # si la lettre n'est pas affichée
-            if lettre not in mot_affiche:
-                mot_affiche = strReplace(mot_choisi, mot_affiche, lettre)
-                lettres_proposees.append(lettre)
+            if lettre in mot_choisi:  # si la lettre est dans le mot choisi
 
-            # si la lettre a déjà été proposée et qu'elle est affichée
-            elif lettre in mot_affiche and lettre in lettres_proposees:
-                print("Lettre déjà proposée et déjà remplacée dans le mot !")
+                # si la lettre n'est pas affichée
+                if lettre not in mot_affiche:
+                    mot_affiche = strReplace(mot_choisi, mot_affiche, lettre)
+                    lettres_proposees.append(lettre)
 
-            coups += 1  # mise à jour du nombre de coups
+                # si la lettre a déjà été proposée et qu'elle est affichée
+                elif lettre in mot_affiche and lettre in lettres_proposees:
+                    print("Lettre déjà proposée et déjà remplacée dans le mot !")
 
-        elif lettre not in mot_choisi:  # si la lettre n'est pas dans le mot
+                coups += 1  # mise à jour du nombre de coups
 
-            # si la lettre a déjà été proposée
-            if lettre in lettres_proposees:
-                print("Lettre déjà proposée et non contenue dans le mot !!")
+            elif lettre not in mot_choisi:  # si la lettre n'est pas dans le mot
 
-            # si la lettre n'est pas contenue dans le mot
-            else:
-                print("Lettre ou caractère non contenu dans le mot !")
+                # si la lettre a déjà été proposée
+                if lettre in lettres_proposees:
+                    print("Lettre déjà proposée et non contenue dans le mot !!")
 
-            coups += 1  # mise à jour du compteur de coups
-            compteur -= 1  # mise à jour du nombre d'essais restants
-            lettres_proposees.append(lettre)
+                # si la lettre n'est pas contenue dans le mot
+                else:
+                    print("Lettre ou caractère non contenu dans le mot !")
+                    lettres_proposees.append(lettre)
+
+                coups += 1  # mise à jour du compteur de coups
+                compteur -= 1  # mise à jour du nombre d'essais restants
+
+        # si la saisie n'est pas une lettre ou si la saisie contient plusieurs caractères
+        elif lettre.islower() is False or len(lettre) != 1:
+            print("Saisir une lettre valide !")
+
 
     # si le mot a été deviné
     if mot_affiche == mot_choisi:
