@@ -17,15 +17,16 @@ def choix_hasard():
     # mots disponibles
     technologies = ["ordinateur", "souris", "clavier", "processeur", "ecran",
                     "enceintes", "smartphone", "casque", "tablette", "drone",
-                    "windows"]
+                    "windows", "linux", "innovations", "internet"]
 
     fruits = ["framboise", "fraise", "pomme", "poire", "pamplemousse",
               "litchi", "orange", "mandarine", "banane", "raisin", "kiwi",
-              "ananas", "cerise"]
+              "ananas", "cerise", "mangue", "groseille", "myrtille"]
 
     animaux = ["gazelle", "vache", "cheval", "pangolin", "zebre", "girafe",
                "ours", "tigre", "hippopotame", "lion", "ecureuil", "otarie",
-               "elephant"]
+               "elephant", "loup", "lama", "cochon", "chimpanze", "chat"]
+
 
     # choix du thème
     theme = input("Avec quel thème souhaitez-vous jouer ?\n\n1- Technologies" +
@@ -41,10 +42,10 @@ def choix_hasard():
         mot_choisi = choice(animaux)
 
     elif theme == "4":  # revenir au menu
-        raise NameError
+        raise TypeError
 
     else:  # en cas d'erreur de saisie
-        raise TypeError
+        raise ValueError
 
     # postconditions
     assert type(mot_choisi) == str  # vérification type du mot
@@ -59,12 +60,12 @@ def strAffiche(ch):
     :return: mot_affiche : str, mot choisi dont les lettres sont masquées
     """
 
-    # préconditions
+    # précondition
     assert type(ch) == str  # vérification du type de la variable
 
     mot_affiche = "*" * len(ch)
 
-    # postconditions
+    # postcondition
     assert len(mot_affiche) == len(ch)  # vérification longueur str
 
     return mot_affiche  # retour du mot masqué
@@ -79,6 +80,7 @@ def strReplace(ch1, ch2, lettre):
     :return: ch : str : mot masqué qui a peut être évolué
     """
 
+    # précondition
     # vérification des types des variables
     assert type(ch1) == str and type(ch2) == str and type(lettre) == str
 
@@ -101,14 +103,15 @@ def menu():
     Menu du jeu du pendu
     """
 
-    print("**********************************************")
-    print("Voici les règles du jeu :\n\n1- Vous disposez d'un nombre d'" +
-          "essais limité défini par la taille du mot à deviner\n\n2- Vous" +
-          "perdez un coup lorsque la lettre n'est pas présente dans le mot" +
-          "ou si la lettre a déjà été saisie mais qu'elle n'est pas contenue" +
-          ".Sinon, vous ne perdez pas de coups\n\n3- Les accents sont " +
-          "comptés faux !")
-    print("**********************************************")
+    print("**************************************** Voici les règles du jeu" +
+          " ****************************************\n1- Vous " +
+          "disposez d'un nombre d'essais limité défini par la taille du mot" +
+          "à deviner\n\n2- Vous perdez un coup lorsque la lettre n'est pas " +
+          "présente dans le mot ou si la lettre a déjà été saisie mais " +
+          "qu'elle n'est pas contenue. Sinon, vous ne perdez pas de coups" +
+          "\n\n3- Les accents sont comptés faux ! (il faut donc les négliger" +
+          ")\n*************************************************************" +
+          "********************************************")
 
     mot_choisi = choix_hasard()  # choix du mot
     compteur = len(mot_choisi) + 1  # initialisation du compteur
@@ -129,7 +132,7 @@ def menu():
         lettre = input("Saisir une lettre : ").lower()
 
         # si la saisie est une lettre valide
-        if lettre.islower() is True and len(lettre) == 1:
+        if lettre.isalpha() is True and len(lettre) == 1:
 
             if lettre in mot_choisi:  # si la lettre est dans le mot choisi
 
@@ -159,7 +162,7 @@ def menu():
                 compteur -= 1  # mise à jour du nombre d'essais restants
 
         # si la saisie n'est pas une lettre ou si la saisie contient plusieurs caractères
-        elif lettre.islower() is False or len(lettre) != 1:
+        elif lettre.isalpha() is False or len(lettre) != 1:
             print("Saisir une lettre valide !")
 
 
@@ -189,7 +192,7 @@ while continuer:
             menu()  # lancement du jeu
 
         elif action == "2":
-            print("\nA bientôt pour de nouvelles parties endiablées !")
+            print("A bientôt pour de nouvelles parties endiablées !")
             continuer = False  # arrêt du jeu
 
         else:
@@ -199,7 +202,7 @@ while continuer:
     # ou si les longueurs des str ne sont valides
     except AssertionError:
         print("Erreur ! (type des variables ou longueurs des chaînes de" +
-              "caractères")
+              "caractères)")
 
     # si l'utilisateur quitte le programme (croix rouge ou cancel)
     except KeyboardInterrupt:
@@ -207,9 +210,8 @@ while continuer:
         continuer = False  # arrêt du jeu
 
     # pour revenir au menu lors du choix du thème
-    except NameError:
+    except TypeError:
         pass
 
-    # le choix du thème n'est pas valide
-    except TypeError:
-        print("Saisir un chiffre ! (1 ou 2 ou 3 ou 4)")
+    except ValueError:
+        print("Saisir un chiffre vaide ! (1, 2, 3 ou 4)")
